@@ -1,26 +1,38 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useStateContext } from "../contexts/contextProvider";
+import axiosClient from "../services/axiosClient";
 
 export default function Login() {
     const { setToken, setUser } = useStateContext();
     const navigate = useNavigate();
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
     const [error, setError] = useState("");
+
+    const emailRef = useRef();
+    const passwordRef = useRef();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setError(""); // Reset errors
+        setError("");
 
-        // Mock login process
-        if (email === "ysamer2525@gmail.com" && password === "12345678") {
-            setToken("Yahya1234567");
-            setUser({ name: "Yahya", email });
-            navigate("/");
-        } else {
-            setError("Invalid email or password");
-        }
+        const payload = {
+            email: emailRef.current.value,
+            password: passwordRef.current.value,
+        };
+
+        axiosClient
+            .post("login", payload)
+            .then(({ data }) => {
+                setUser(data.user);
+                setToken(data.token);
+            })
+            .catch((err) => {
+                const response = err.response;
+                if (response) {
+                    console.error(response.data.message);
+                    setError(response.data.message);
+                }
+            });
     };
 
     return (
@@ -41,8 +53,7 @@ export default function Login() {
                         <input
                             type="email"
                             id="email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
+                            ref={emailRef}
                             required
                             className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                         />
@@ -57,8 +68,7 @@ export default function Login() {
                         <input
                             type="password"
                             id="password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
+                            ref={passwordRef}
                             required
                             className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                         />

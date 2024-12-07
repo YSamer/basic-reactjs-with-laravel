@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const axiosClient = axios.create({
-    baseURL: "http://localhost:8000/api",
+    baseURL: "http://localhost:8005/api",
 });
 
 axiosClient.interceptors.request.use((config) => {
@@ -17,10 +17,13 @@ axiosClient.interceptors.response.use(
         return response;
     },
     (error) => {
-        const response = error;
-        if (response.status === 401) {
-            localStorage.removeItem("ACCESS_TOKEN");
-            window.location.href = "/login";
+        try {
+            const response = error;
+            if (response.status === 401) {
+                localStorage.removeItem("ACCESS_TOKEN");
+            }
+        } catch (error) {
+            console.error(error);
         }
         throw error;
     }

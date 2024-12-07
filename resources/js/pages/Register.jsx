@@ -1,27 +1,40 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useStateContext } from "../contexts/contextProvider";
+import axiosClient from "../services/axiosClient";
 
 export default function Register() {
     const { setToken, setUser } = useStateContext();
-    const navigate = useNavigate();
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [name, setName] = useState("");
     const [error, setError] = useState("");
+    const navigate = useNavigate();
+    
+    const nameRef = useRef();
+    const emailRef = useRef();
+    const passwordRef = useRef();
+
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        setError(""); // Reset errors
+        setError("");
+        const payload = {
+            name: nameRef.current.value,
+            email: emailRef.current.value,
+            password: passwordRef.current.value,
+        };
 
-        // Mock register process
-        if (email && password && name) {
-            setToken("1234567"); // Mock token
-            setUser({ name, email }); // Mock user data
-            navigate("/"); // Redirect to the home page
-        } else {
-            setError("All fields are required");
-        }
+        axiosClient
+            .post("register", payload)
+            .then(({ data }) => {
+                setUser(data.user);
+                setToken(data.token);
+            })
+            .catch((err) => {
+                const response = err.response;
+                if (response && response.status === 422) {
+                    console.error(response.data.message);
+                    setError(response.data.message);
+                }
+            });
     };
 
     return (
@@ -44,8 +57,9 @@ export default function Register() {
                         <input
                             type="text"
                             id="name"
-                            value={name}
-                            onChange={(e) => setName(e.target.value)}
+                            // value={name}
+                            // onChange={(e) => setName(e.target.value)}
+                            ref={nameRef}
                             required
                             className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                         />
@@ -60,8 +74,9 @@ export default function Register() {
                         <input
                             type="email"
                             id="email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
+                            // value={email}
+                            // onChange={(e) => setEmail(e.target.value)}
+                            ref={emailRef}
                             required
                             className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                         />
@@ -76,8 +91,9 @@ export default function Register() {
                         <input
                             type="password"
                             id="password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
+                            // value={password}
+                            // onChange={(e) => setPassword(e.target.value)}
+                            ref={passwordRef}
                             required
                             className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                         />
