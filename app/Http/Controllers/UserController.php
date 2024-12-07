@@ -29,14 +29,22 @@ class UserController extends Controller
     }
 
     // Retrieve a single user
-    public function show($user)
+    public function show($id)
     {
+        $user = User::find($id);
+        if (!$user) {
+            return response()->json(['message' => 'User not found'], 404);
+        }
         return new UserResource($user);
     }
 
     // Update a user
-    public function update(UpdateUserRequest $request, $user)
+    public function update(UpdateUserRequest $request, $id)
     {
+        $user = User::find($id);
+        if (!$user) {
+            return response()->json(['message' => 'User not found'], 404);
+        }
         $data = $request->validated();
         if (isset($data['password'])) {
             $data['password'] = Hash::make($data['password']);
