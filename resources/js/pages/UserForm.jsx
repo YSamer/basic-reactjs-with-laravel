@@ -43,8 +43,8 @@ function UserForm() {
         setError(null);
 
         const apiCall = id
-            ? axiosClient.put(`/users/${id}`, user) // Update existing user
-            : axiosClient.post("/users", user); // Create new user
+            ? axiosClient.put(`/users/${id}`, user)
+            : axiosClient.post("/users", user);
 
         apiCall
             .then(() => {
@@ -59,7 +59,7 @@ function UserForm() {
     return (
         <div className="p-4">
             <h1 className="text-lg font-bold mb-4">
-                {id ? "Edit User" : "Add New User"}
+                {id ? `Edit User ${user?.name ?? ""}` : "Add New User"}
             </h1>
             {error && <p className="text-red-500 mb-4">{error}</p>}
             <form onSubmit={handleSubmit} className="space-y-4">
