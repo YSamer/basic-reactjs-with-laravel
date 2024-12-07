@@ -1,2 +1,2 @@
 import './bootstrap';
-import './components/Main'
+import './src/Main'

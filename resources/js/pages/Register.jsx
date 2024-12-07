@@ -2,35 +2,54 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useStateContext } from "../contexts/contextProvider";
 
-export default function Login() {
+export default function Register() {
     const { setToken, setUser } = useStateContext();
     const navigate = useNavigate();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [name, setName] = useState("");
     const [error, setError] = useState("");
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = (e) => {
         e.preventDefault();
         setError(""); // Reset errors
 
-        // Mock login process
-        if (email === "ysamer2525@gmail.com" && password === "12345678") {
-            setToken("Yahya1234567");
-            setUser({ name: "Yahya", email });
-            navigate("/");
+        // Mock register process
+        if (email && password && name) {
+            setToken("1234567"); // Mock token
+            setUser({ name, email }); // Mock user data
+            navigate("/"); // Redirect to the home page
         } else {
-            setError("Invalid email or password");
+            setError("All fields are required");
         }
     };
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-100">
             <div className="bg-white p-8 rounded shadow-md w-full max-w-sm">
-                <h1 className="text-2xl font-bold mb-6 text-center">Login</h1>
+                <h1 className="text-2xl font-bold mb-6 text-center">
+                    Register
+                </h1>
                 {error && (
                     <div className="mb-4 text-red-500 text-center">{error}</div>
                 )}
                 <form onSubmit={handleSubmit} className="space-y-4">
+                    <div>
+                        <label
+                            htmlFor="name"
+                            className="block text-sm font-medium text-gray-700"
+                        >
+                            Name
+                        </label>
+                        <input
+                            type="text"
+                            id="name"
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                            required
+                            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                        />
+                    </div>
                     <div>
                         <label
                             htmlFor="email"
@@ -65,17 +84,18 @@ export default function Login() {
                     </div>
                     <button
                         type="submit"
-                        className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 transition"
+                        className="w-full bg-green-500 text-white py-2 rounded hover:bg-green-600 transition"
                     >
-                        Login
+                        Register
                     </button>
                 </form>
                 <div className="text-center mt-4">
+                    Already have an account?{" "}
                     <button
-                        onClick={() => navigate("/register")}
+                        onClick={() => navigate("/login")}
                         className="text-blue-500 hover:underline"
                     >
-                        Create an account
+                        Login
                     </button>
                 </div>
             </div>
