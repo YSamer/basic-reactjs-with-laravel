@@ -27,7 +27,15 @@ export default function DefaultLayout() {
             className="min-h-screen bg-gray-100 text-gray-900"
         >
             <header className="flex items-center justify-between bg-white shadow px-6 py-4">
-                <div className="text-lg font-semibold">Header</div>
+                <div className="flex items-center space-x-4">
+                    <div className="text-lg font-semibold">Header</div>
+                    <a
+                        href="/users"
+                        className="text-sm text-black px-4 py-2 rounded-md hover:bg-blue-600 hover:text-white transition"
+                    >
+                        Users
+                    </a>
+                </div>
                 <div className="flex items-center space-x-4">
                     <span className="font-medium">{user.name}</span>
                     <a
